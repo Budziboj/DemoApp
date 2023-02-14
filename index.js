@@ -6,7 +6,8 @@ const methodOverride = require('method-override')
 
 
 const Product = require('./models/product');
-const { resourceLimits } = require('worker_threads');
+const Farm = require('./models/farm');
+// const { resourceLimits } = require('worker_threads');
 
 mongoose.set('strictQuery', true);
 mongoose.connect('mongodb://127.0.0.1:27017/farmStand2', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -27,12 +28,24 @@ app.use(methodOverride('_method'))
 
 //FARM ROUTES
 
+app.get('/farms', async (req, res) => {
+    const farms = await Farm.find({});
+    res.render('farms/index', { farms })
+})
+
 app.get('/farms/new', (req, res) => {
     res.render('farms/new')
 })
+app.get('/farms/:id', async (req, res) => {
+    const farm = await Farm.findById(req.params.id);
+    res.render('farms/show', { farm })
+})
 
 app.post('/farms', async (req, res) => {
-    res.send(req.body)
+    const farm = new Farm(req.body);
+    await farm.save();
+    console.log(farm);
+    res.redirect('/farms');
 })
 
 
