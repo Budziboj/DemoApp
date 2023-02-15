@@ -32,7 +32,9 @@ app.get('/farms', async (req, res) => {
     const farms = await Farm.find({});
     res.render('farms/index', { farms })
 })
-
+app.get('/farms/new', (req, res) => {
+    res.render('farms/new')
+})
 app.get('/farms/:id', async (req, res) => {
     const farm = await Farm.findById(req.params.id).populate('products');
     // console.log(farm)
@@ -40,14 +42,12 @@ app.get('/farms/:id', async (req, res) => {
 })
 
 app.delete('/farms/:id', async (req, res) => {
-    console.log("DELETING")
-    // await Farm.findByIdAndDelete(req.params.id);
+    // console.log("DELETING")
+    await Farm.findByIdAndDelete(req.params.id);
     res.redirect('/farms');
 })
 
-app.get('/farms/new', (req, res) => {
-    res.render('farms/new')
-})
+
 
 
 app.post('/farms', async (req, res) => {
