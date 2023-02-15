@@ -33,23 +33,30 @@ app.get('/farms', async (req, res) => {
     res.render('farms/index', { farms })
 })
 
+app.get('/farms/:id', async (req, res) => {
+    const farm = await Farm.findById(req.params.id).populate('products');
+    // console.log(farm)
+    res.render('farms/show', { farm })
+})
+
+app.delete('/farms/:id', async (req, res) => {
+    console.log("DELETING")
+    // await Farm.findByIdAndDelete(req.params.id);
+    res.redirect('/farms');
+})
+
 app.get('/farms/new', (req, res) => {
     res.render('farms/new')
 })
 
 
-
 app.post('/farms', async (req, res) => {
     const farm = new Farm(req.body);
     await farm.save();
-    console.log(farm);
+    // console.log(farm);
     res.redirect('/farms');
 })
-app.get('/farms/:id', async (req, res) => {
-    const farm = await Farm.findById(req.params.id).populate('products');
-    console.log(farm)
-    res.render('farms/show', { farm })
-})
+
 
 app.get('/farms/:id/products/new', async (req, res) => {
     const { id } = req.params;
@@ -69,17 +76,17 @@ app.post('/farms/:id/products', async (req, res) => {
     res.redirect(`/farms/${farm._id}`)
 })
 //THESE 2 ROUTES ARE TO EDIT FARM
-// app.put('/products/:id', async (req, res) => {
-//     const { id } = req.params;
-//     const product = await Product.findByIdAndUpdate(id, req.body)
-//     console.log(req.body)
-//     res.redirect(`/products/${product._id}`)
-// })
-
 // app.get('/products/:id/edit', async (req, res) => {
 //     const { id } = req.params;
-//     const product = await Product.findById(id);
-//     res.render('products/edit', { product, categories })
+//     const farm = await Farm.findById(id);
+//     res.render('farms/edit', { product, categories })
+// })
+
+// app.put('/products/:id', async (req, res) => {
+//     const { id } = req.params;
+//     const farm = await Farm.findByIdAndUpdate(id, req.body)
+//     console.log(req.body)
+//     res.redirect(`/farms/${farm._id}`)
 // })
 
 

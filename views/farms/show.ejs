@@ -33,12 +33,10 @@
     <a href="/farms/<%= farm._id %>/products/new">Add a Product</a>
 
     <a href="/farms">All Farms</a>
-    <a href="/farms/<%= farm._id %>/edit ">Edit</a>
+    <a href="/farms/<%= farm._id %>/edit">Edit</a>
     <form action="/farms/<%= farm._id %>?_method=DELETE" method="POST">
-        <button>DELETE</button>
+        <button>DELETE <%= farm.name %></button>
     </form>
-
-    <form action="/farms/<%= farm._id %>?_method=DELETE"><button>Delete <%= farm.name %></button></form>
 </body>
 
 </html>
