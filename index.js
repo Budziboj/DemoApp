@@ -36,10 +36,8 @@ app.get('/farms', async (req, res) => {
 app.get('/farms/new', (req, res) => {
     res.render('farms/new')
 })
-app.get('/farms/:id', async (req, res) => {
-    const farm = await Farm.findById(req.params.id);
-    res.render('farms/show', { farm })
-})
+
+
 
 app.post('/farms', async (req, res) => {
     const farm = new Farm(req.body);
@@ -47,13 +45,42 @@ app.post('/farms', async (req, res) => {
     console.log(farm);
     res.redirect('/farms');
 })
-
-app.get('/farms/:id/products/new', (req, res) => {
-    const { id } = req.params.id;
-    res.render('products/new', { categories, id });
+app.get('/farms/:id', async (req, res) => {
+    const farm = await Farm.findById(req.params.id).populate('products');
+    console.log(farm)
+    res.render('farms/show', { farm })
 })
 
+app.get('/farms/:id/products/new', async (req, res) => {
+    const { id } = req.params;
+    const farm = await Farm.findById(id);
+    res.render('products/new', { categories, farm });
+})
 
+app.post('/farms/:id/products', async (req, res) => {
+    const { id } = req.params;
+    const farm = await Farm.findById(id);
+    const { name, price, category } = req.body;
+    const product = new Product({ name, price, category })
+    farm.products.push(product)
+    product.farm = farm;
+    await farm.save();
+    await product.save();
+    res.redirect(`/farms/${farm._id}`)
+})
+//THESE 2 ROUTES ARE TO EDIT FARM
+// app.put('/products/:id', async (req, res) => {
+//     const { id } = req.params;
+//     const product = await Product.findByIdAndUpdate(id, req.body)
+//     console.log(req.body)
+//     res.redirect(`/products/${product._id}`)
+// })
+
+// app.get('/products/:id/edit', async (req, res) => {
+//     const { id } = req.params;
+//     const product = await Product.findById(id);
+//     res.render('products/edit', { product, categories })
+// })
 
 
 //PRODUCT ROUTES
@@ -84,12 +111,12 @@ app.get('/products', async (req, res) => {
 
 
 
-//NEW
+//NEW PRODUCT
 app.get('/products/new', (req, res) => {
     res.render('products/new', { categories })
 })
 
-//POST
+//POST PRODUCT
 app.post('/products', async (req, res) => {
     const newProduct = new Product(req.body);
     await newProduct.save();
@@ -97,15 +124,14 @@ app.post('/products', async (req, res) => {
     res.redirect(`/products/${newProduct._id}`)
 })
 
-//ID
+//SHOW PRODUCT
 app.get('/products/:id', async (req, res) => {
     const { id } = req.params;
-    const product = await Product.findById(id)
-    console.log(product)
-    res.render('products/show', { product })
+    const product = await Product.findById(id).populate('farm', 'name');
+    res.render('products/show', { product });
 })
 
-//EDIT
+//EDIT PRODUCT render products/edit form
 app.get('/products/:id/edit', async (req, res) => {
     const { id } = req.params;
     const product = await Product.findById(id);
@@ -118,14 +144,15 @@ app.get('/products/:id/edit', async (req, res) => {
 //     // res.render('products/edit', { product })
 // })
 
+//EDIT PRODUCT PUT
 app.put('/products/:id', async (req, res) => {
     const { id } = req.params;
-    // const product = await Product.findByIdAndUpdate(id, req.body, { runValidators: true, new: true })
     const product = await Product.findByIdAndUpdate(id, req.body)
     console.log(req.body)
     res.redirect(`/products/${product._id}`)
 })
 
+//DELETE PRODUCT
 app.delete('/products/:id', async (req, res) => {
     const { id } = req.params;
     const deletedProduct = await Product.findByIdAndDelete(id);

@@ -17,19 +17,22 @@
     <ul>
         <li>Price: $<%= product.price %>
         </li>
-        <li>Category: <a href="/products?category=<%= product.category %>">
-                <%= product.category %>
-            </a>
+        <li>
+            Category: <a href="/products?category=<%= product.category %>"><%= product.category %></a>
         </li>
-        <li>ID: <%= product._id %>
+        <li>
+            ID: <%= product._id %>
         </li>
+        
+          Farm: <a href="/farms/<%= product.farm._id %>"><%= product.farm.name %></a>
+          <h1><%= product.farm._id %></h1>
+        </li>
+      
     </ul>
 
     <a href="/products">All Products</a>
     <a href="/products/<%= product._id %>/edit ">Edit</a>
-    <form action="/products/<%= product._id %>?_method=DELETE" method="POST">
-        <button>DELETE</button>
-    </form>
+    
 </body>
 
 </html>

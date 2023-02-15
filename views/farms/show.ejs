@@ -21,12 +21,24 @@
 
         <li>ID: <%= farm._id %></li>
     </ul>
+    <ul>
+        <h2>Products</h2>
+    </ul>
+    <ul>
+        <% for (let product of farm.products) { %>
+            <li><a href="/products/<%= product._id %>"><%= product.name %></a> - price: $<%= product.price %></li>
+            <% } %>
+    </ul>
+
+    <a href="/farms/<%= farm._id %>/products/new">Add a Product</a>
 
     <a href="/farms">All Farms</a>
     <a href="/farms/<%= farm._id %>/edit ">Edit</a>
     <form action="/farms/<%= farm._id %>?_method=DELETE" method="POST">
         <button>DELETE</button>
     </form>
+
+    <form action="/farms/<%= farm._id %>?_method=DELETE"><button>Delete <%= farm.name %></button></form>
 </body>
 
 </html>
