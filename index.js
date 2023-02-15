@@ -48,6 +48,11 @@ app.post('/farms', async (req, res) => {
     res.redirect('/farms');
 })
 
+app.get('/farms/:id/products/new', (req, res) => {
+    const { id } = req.params.id;
+    res.render('products/new', { categories, id });
+})
+
 
 
 
